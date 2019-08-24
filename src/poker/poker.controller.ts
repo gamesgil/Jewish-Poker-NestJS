@@ -22,4 +22,9 @@ export class PokerController {
     getPokerMove(@Req() req: Request) {
         return this.pokerService.gameMove(+req.query.id, +req.query.move);
     }
+
+    @Get('status')
+    getStatus(id) {
+        return this.pokerService.getGame(id);
+    }
 }
