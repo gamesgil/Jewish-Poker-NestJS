@@ -13,8 +13,8 @@ export interface Poker {
 
 export class Arvinca {
     id: number;
-    moves: {mine: Poker, other: Poker} = {
-        mine: {value: 0, bonus: Bonus.None, pagat: false},
+    moves: {arvinca: Poker, other: Poker} = {
+        arvinca: {value: 0, bonus: Bonus.None, pagat: false},
         other: {value: 0, bonus: Bonus.None, pagat: false},
     };
 
@@ -53,7 +53,7 @@ export class Arvinca {
             if (move === Bonus.Recontra) {
                 if (!this.moves.other.value ||
                     this.moves.other.bonus !== Bonus.None ||
-                    this.moves.mine.bonus !== Bonus.Contra) {
+                    this.moves.arvinca.bonus !== Bonus.Contra) {
                     return false;
                 } else {
                     this.moves.other.bonus = Bonus.Recontra;
@@ -80,31 +80,31 @@ export class Arvinca {
         }
 
         // my first move
-        if (!this.moves.mine.value && !this.moves.other.value) {
-            this.moves.mine.value = Math.floor(Math.random() * 10) + 1;
-            
+        if (!this.moves.arvinca.value && !this.moves.other.value) {
+            this.moves.arvinca.value = Math.floor(Math.random() * 10) + 1;
+
             return true;
         }
 
         // my responding move
-        if (!this.moves.mine.value && this.moves.other.value) {
-            this.moves.mine.value = this.moves.other.value + 1;
+        if (!this.moves.arvinca.value && this.moves.other.value) {
+            this.moves.arvinca.value = this.moves.other.value + 1;
 
             return true;
         }
 
         // my first bonus move
-        if (!this.iLead() && this.moves.mine.bonus === Bonus.None
+        if (!this.iLead() && this.moves.arvinca.bonus === Bonus.None
             && this.moves.other.bonus === Bonus.None) {
-            this.moves.mine.bonus = Bonus.Contra;
+            this.moves.arvinca.bonus = Bonus.Contra;
 
             return true;
         }
 
         // my counter bonus move
-        if (!this.iLead() && this.moves.mine.bonus === Bonus.None
+        if (!this.iLead() && this.moves.arvinca.bonus === Bonus.None
             && this.moves.other.bonus === Bonus.Contra) {
-            this.moves.mine.bonus = Bonus.Recontra;
+            this.moves.arvinca.bonus = Bonus.Recontra;
 
             return true;
         }
@@ -112,15 +112,15 @@ export class Arvinca {
 
     isGameOver() {
         // if last move is pagat
-        if (this.moves.mine.pagat || this.moves.other.pagat) {
+        if (this.moves.arvinca.pagat || this.moves.other.pagat) {
             return true;
         }
 
-        if (this.isMyTurn() && this.iLead() && this.moves.mine.bonus !== Bonus.None) {
+        if (this.isMyTurn() && this.iLead() && this.moves.arvinca.bonus !== Bonus.None) {
             return true;
         }
 
-        if (!this.isMyTurn() && this.iTrail() && this.moves.mine.bonus !== Bonus.None) {
+        if (!this.isMyTurn() && this.iTrail() && this.moves.arvinca.bonus !== Bonus.None) {
             return true;
         }
 
@@ -128,19 +128,19 @@ export class Arvinca {
     }
 
     isMyTurn() {
-        return this.iPlayFirst && !this.moves.mine.value
+        return this.iPlayFirst && !this.moves.arvinca.value
             || !this.iPlayFirst && this.moves.other.value
-            || this.moves.mine.value && !this.moves.mine.bonus && this.moves.other.value;
+            || this.moves.arvinca.value && !this.moves.arvinca.bonus && this.moves.other.value;
     }
 
     iLead() {
-        const mine = this.getValue('mine');
+        const arvinca = this.getValue('arvinca');
         const other = this.getValue('other');
-        return mine > other;
+        return arvinca > other;
     }
 
     iTrail() {
-        return this.getValue('mine') < this.getValue('other');
+        return this.getValue('arvinca') < this.getValue('other');
     }
 
     getValue(type) {

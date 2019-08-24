@@ -1,38 +1,25 @@
-import { Controller, Get, Req } from '@nestjs/common';
-import { Arvinca } from './arvinca.service';
+import { Controller, Get, Req, Post, Body } from '@nestjs/common';
 import { Request } from 'express';
+import { PokerService } from './poker.service';
 
 @Controller('poker')
 export class PokerController {
-    games: Arvinca[] = [];
+    constructor(private readonly pokerService: PokerService) {}
 
-    @Get()
-    init(@Req() req: Request) {
-        this.games.push(new Arvinca(this.games.length, !req.params.move));
+    @Post()
+    init(@Body() dto) {
+        const id = this.pokerService.init(dto.move);
 
-        return this.games[this.games.length - 1].id;
+        return id;
     }
 
     @Get('move')
-    makeMove(@Req() req: Request) {
-        const game = this.getGame(+req.query.id);
-        const response = game.getMove(+req.query.move);
-
-        return game.getStatus();
+    playerMove(@Req() req: Request) {
+        return this.pokerService.playerMove(+req.query.id, +req.query.move);
     }
 
     @Get('get')
-    getMove(@Req() req: Request) {
-        const game = this.getGame(+req.query.id);
-        game.makeNextMove();
-
-        return game.getStatus();
-        
-    }
-
-    getGame(id) {
-        const result = this.games.find(game => game.id === id);
-
-        return result;
+    getPokerMove(@Req() req: Request) {
+        return this.pokerService.gameMove(+req.query.id, +req.query.move);
     }
 }
