@@ -152,6 +152,8 @@ export class Arvinca {
     }
 
     getStatus() {
-        return this.moves;
+        return Object.assign({
+            gameOver: this.isGameOver()
+        }, this.moves);
     }
 }
